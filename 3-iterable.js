@@ -6,8 +6,55 @@ If you used an array to represent the group’s members, don’t just return the
 It is okay if your iterator behaves strangely when the group is modified during iteration.
 */
 
-// Your code here (and the code from the previous exercise)
+class Group {
 
+  constructor(){
+    this.newArray = [];
+  }
+
+  static from(array){
+    this.newArray = array;
+    return this;
+  }
+  static has(numbers){ // or use includes :D
+    for(let item of this.newArray){
+      if(item == numbers){
+        return true;
+      }
+    }
+    return false;
+  }
+  static add(number){
+    if(!this.newArray.includes(number)){
+      this.newArray.push(number);
+    }
+  }
+  static delete(number){
+      this.newArray = this.newArray.filter((num) => num != number);
+  }
+}
+
+class GroupIterator extends Group{
+  constructor(GroupArray) {
+    super(GroupArray);
+  }
+
+  next(){
+    let index = 0;
+    if(index == this.newArray.length){
+      return {done: true};
+    }
+    let value = {value:this.newArray[index]}
+    index ++;
+    return {value, done:false};
+  }
+}
+
+Group.prototype[Symbol.iterator] = function() {
+  return new GroupIterator(this);
+};
+console.log(new GroupIterator(["a", "b", "c"]))
+console.log(Group.from(["a", "b", "c"]))
 
 // Tests:
 for (let value of Group.from(["a", "b", "c"])) {
